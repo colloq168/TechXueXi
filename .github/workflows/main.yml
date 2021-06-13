@@ -1,18 +1,17 @@
-name: sync-TechXueXi/TechXueXi
-
+name: sync-code
 on:
-  schedule:
-  - cron:  "*/15 * * * *"
   workflow_dispatch:
+  schedule:
+    - cron: '*/15 * * * *'
   watch:
     types: started
 
 jobs:
-  build:
+  sync:
     runs-on: ubuntu-18.04
     if: github.event.repository.owner.id == github.event.sender.id
     timeout-minutes: 2
-
+    
     steps:
     - name: Init Build Dependencies
       env:
@@ -20,54 +19,99 @@ jobs:
       run: |
         sudo -E rm -rf /etc/apt/sources.list.d
         sudo -E apt-get update -y
-        sudo -E apt-get install -y build-essential git git-core curl wget
+        sudo -E apt-get install -y build-essential git git-core curl wget jq
         sudo -E apt-get clean -y
         git config --global user.name 'GitHub Actions' && git config --global user.email 'noreply@github.com'
-
-    - name: Prepare
+        
+    - name: Get Code from Private Repository
       run: |
         mkdir -p ~/.ssh
         echo -e "${{ secrets.LXKEY }}" > ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa
         ssh-keyscan gitee.com > ~/.ssh/known_hosts
-
-    - name: Clone Master
-      run: |
         git clone -b master https://github.com/TechXueXi/TechXueXi.git master
-
-    - name: Push Master
-      uses: ad-m/github-push-action@master
-      with:
-        directory: master
-        github_token: ${{ secrets.PAT }}
-        branch: master
-
-    - name: Clone Dev
-      run: |
-        git clone -b dev https://github.com/TechXueXi/TechXueXi.git dev
-
-    - name: Push Dev
-      uses: ad-m/github-push-action@master
-      with:
-        directory: dev
-        github_token: ${{ secrets.PAT }}
-        branch: dev
         
-    - name: Clone Dev-mg
+    - name: Push to master
       run: |
+        echo -e "${{ secrets.GITHUBKEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan github.com > ~/.ssh/known_hosts
+        cd master
+        git remote add github "${{ secrets.GITHUBREPO }}"
+        git push -u github master >/dev/null 2>&1
+        
+    - name: Get Code from Private Repository
+      run: |
+        mkdir -p ~/.ssh
+        echo -e "${{ secrets.LXKEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan gitee.com > ~/.ssh/known_hosts
+        git clone -b dev https://github.com/TechXueXi/TechXueXi.git dev
+        
+    - name: Push to dev
+      run: |
+        echo -e "${{ secrets.GITHUBKEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan github.com > ~/.ssh/known_hosts
+        cd dev
+        git remote add github "${{ secrets.GITHUBREPO }}"
+        git push -u github dev >/dev/null 2>&1
+
+    - name: Get Code from Private Repository
+      run: |
+        mkdir -p ~/.ssh
+        echo -e "${{ secrets.LXKEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan gitee.com > ~/.ssh/known_hosts
+        git clone -b dev2 https://github.com/TechXueXi/TechXueXi.git dev2
+        
+    - name: Push to dev2
+      run: |
+        echo -e "${{ secrets.GITHUBKEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan github.com > ~/.ssh/known_hosts
+        cd dev2
+        git remote add github "${{ secrets.GITHUBREPO }}"
+        git push -u github dev2 >/dev/null 2>&1
+
+    - name: Get Code from Private Repository
+      run: |
+        mkdir -p ~/.ssh
+        echo -e "${{ secrets.LXKEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan gitee.com > ~/.ssh/known_hosts
         git clone -b dev-mg https://github.com/TechXueXi/TechXueXi.git dev-mg
+        
+    - name: Push to dev-mg
+      run: |
+        echo -e "${{ secrets.GITHUBKEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan github.com > ~/.ssh/known_hosts
+        cd dev-mg
+        git remote add github "${{ secrets.GITHUBREPO }}"
+        git push -u github dev-mg >/dev/null 2>&1
 
-    - name: Push Dev-mg
-      uses: ad-m/github-push-action@master
+    - name: Get Code from Private Repository
+      run: |
+        mkdir -p ~/.ssh
+        echo -e "${{ secrets.LXKEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan gitee.com > ~/.ssh/known_hosts
+        git clone -b dev-headless-single-docker https://github.com/TechXueXi/TechXueXi.git dev-headless-single-docker
+        
+    - name: Push to dev-headless-single-docker
+      run: |
+        echo -e "${{ secrets.GITHUBKEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan github.com > ~/.ssh/known_hosts
+        cd dev-headless-single-docker
+        git remote add github "${{ secrets.GITHUBREPO }}"
+        git push -u github dev-headless-single-docker >/dev/null 2>&1
+
+    - name: Delete Workflow Runs
+      uses: Mattraks/delete-workflow-runs@main
       with:
-        directory: dev-mg
-        github_token: ${{ secrets.PAT }}
-        branch: dev-mg
-
-    # - name: Delete Workflow Runs
-      # uses: Mattraks/delete-workflow-runs@main
-      # with:
-        # token: ${{ github.token }}
-        # repository: ${{ github.repository }}
-        # retain_days: 1
-        # keep_minimum_runs: 0
+        token: ${{ github.token }}
+        repository: ${{ github.repository }}
+        retain_days: 1
+        keep_minimum_runs: 0
