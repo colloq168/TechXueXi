@@ -63,40 +63,6 @@ jobs:
         echo -e "${{ secrets.LXKEY }}" > ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa
         ssh-keyscan gitee.com > ~/.ssh/known_hosts
-        git clone -b backup20210605 https://github.com/TechXueXi/TechXueXi.git backup20210605
-        
-    - name: Push to backup20210605
-      run: |
-        echo -e "${{ secrets.GITHUBKEY }}" > ~/.ssh/id_rsa
-        chmod 600 ~/.ssh/id_rsa
-        ssh-keyscan github.com > ~/.ssh/known_hosts
-        cd backup20210605
-        git remote add github "${{ secrets.GITHUBREPO }}"
-        git push -u github backup20210605 >/dev/null 2>&1
-
-    - name: Get Code from Private Repository
-      run: |
-        mkdir -p ~/.ssh
-        echo -e "${{ secrets.LXKEY }}" > ~/.ssh/id_rsa
-        chmod 600 ~/.ssh/id_rsa
-        ssh-keyscan gitee.com > ~/.ssh/known_hosts
-        git clone -b backup20210630 https://github.com/TechXueXi/TechXueXi.git backup20210630
-        
-    - name: Push to backup20210630
-      run: |
-        echo -e "${{ secrets.GITHUBKEY }}" > ~/.ssh/id_rsa
-        chmod 600 ~/.ssh/id_rsa
-        ssh-keyscan github.com > ~/.ssh/known_hosts
-        cd backup20210630
-        git remote add github "${{ secrets.GITHUBREPO }}"
-        git push -u github backup20210630 >/dev/null 2>&1
-
-    - name: Get Code from Private Repository
-      run: |
-        mkdir -p ~/.ssh
-        echo -e "${{ secrets.LXKEY }}" > ~/.ssh/id_rsa
-        chmod 600 ~/.ssh/id_rsa
-        ssh-keyscan gitee.com > ~/.ssh/known_hosts
         git clone -b dev-mg https://github.com/TechXueXi/TechXueXi.git dev-mg
         
     - name: Push to dev-mg
