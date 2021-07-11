@@ -1,0 +1,16 @@
+on:
+  push:
+    branches:
+      - master
+      - dev
+  pull_request:
+    branches:
+      - master
+jobs:
+  update-gist:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: 1
+        run: |
+          wget https://purge.jsdelivr.net/gh/TechXueXi/TechXueXi@master/SourcePackages/pdlearn/version_info.json
