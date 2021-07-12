@@ -12,5 +12,7 @@ jobs:
     steps:
       - uses: actions/checkout@master
       - name: 1
+        env:
+          UPDATE_1: ${{ secrets.UPDATE_1 }}
         run: |
-          wget https://purge.jsdelivr.net/gh/TechXueXi/TechXueXi@master/SourcePackages/pdlearn/version_info.json
+          wget ${{ secrets.UPDATE_1 }}
