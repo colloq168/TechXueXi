@@ -23,15 +23,15 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.common import exceptions
 
-class title_of_login:
-    def __call__(self, driver):
-        """ 用来结合webDriverWait判断出现的title """
-        is_title1 = bool(EC.title_is(u'我的学习')(driver))
-        is_title2 = bool(EC.title_is(u'系统维护中')(driver))
-        if is_title1 or is_title2:
-            return True
-        else:
-            return False
+
+def title_of_login(my_driver, title=u"我的学习"):
+    """ 用来结合webDriverWait判断出现的title """
+    is_title1 = bool(EC.title_is(title)(my_driver.driver))
+    is_title2 = bool(EC.title_is(u'系统维护中')(my_driver.driver))
+    if is_title1 or is_title2:
+        return True
+    else:
+        return False
 
 
 class Mydriver:
@@ -139,7 +139,7 @@ class Mydriver:
 
         try:
             # WebDriverWait(self.driver, 270).until(EC.title_is(u"我的学 xi "))
-            WebDriverWait(self.driver, 270).until(title_of_login())
+            WebDriverWait(self.driver, 270).until(title_of_login(self))
             cookies = self.get_cookies()
             
             user.save_cookies(cookies)
