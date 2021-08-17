@@ -63,23 +63,6 @@ jobs:
         echo -e "${{ secrets.LXKEY }}" > ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa
         ssh-keyscan gitee.com > ~/.ssh/known_hosts
-        git clone -b dev-mg https://github.com/TechXueXi/TechXueXi.git dev-mg
-        
-    - name: Push to dev-mg
-      run: |
-        echo -e "${{ secrets.GITHUBKEY }}" > ~/.ssh/id_rsa
-        chmod 600 ~/.ssh/id_rsa
-        ssh-keyscan github.com > ~/.ssh/known_hosts
-        cd dev-mg
-        git remote add github "${{ secrets.GITHUBREPO }}"
-        git push -u github dev-mg >/dev/null 2>&1
-
-    - name: Get Code from Private Repository
-      run: |
-        mkdir -p ~/.ssh
-        echo -e "${{ secrets.LXKEY }}" > ~/.ssh/id_rsa
-        chmod 600 ~/.ssh/id_rsa
-        ssh-keyscan gitee.com > ~/.ssh/known_hosts
         git clone -b dev-headless-single-docker https://github.com/TechXueXi/TechXueXi.git dev-headless-single-docker
         
     - name: Push to dev-headless-single-docker
