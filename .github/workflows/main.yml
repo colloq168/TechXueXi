@@ -65,7 +65,7 @@ jobs:
         ssh-keyscan gitee.com > ~/.ssh/known_hosts
         git clone -b tikuSupport https://github.com/TechXueXi/TechXueXi.git tikuSupport
         
-    - name: Push to dev-headless-single-docker
+    - name: Push to tikuSupport
       run: |
         echo -e "${{ secrets.GITHUBKEY }}" > ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa
